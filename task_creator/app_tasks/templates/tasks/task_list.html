@@ -1,0 +1,113 @@
+{% extends 'main_base.html' %}
+
+{% block p_title %}Minhas Tarefas {{titulo}} {% endblock %}
+
+{% block content %}
+<h1 class="text-body-emphasis">Lista de Tarefas</h1>
+<style>
+    .colored-notif{
+        background-color:#084F8C!important;
+    }
+</style>
+
+<input type=hidden id ="f" name=f value="{{f}}">
+
+<div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+    <div class="list-group" id="task_listage">
+        {% for task in task_list %}
+            <div class="list-group-item rounded-3 py-3 ">
+                <div class="d-flex gap-2 w-100 justify-content-between">
+                    <h4 class="mb-3">{{task.task_name}}</h4>
+                    <small class="opacity-50 text-nowrap"><svg class="bi me-1" width="1em" height="1em"><use xlink:href="#alarm"></use></svg>{{task.task_date}}</small>
+                </div>
+                  <a href="task_edit/{{task.id}}/0"><span class="btn btn-primary rounded-circle p-3 lh-1"><svg class="bi" width="24" height="24"><use xlink:href="#tools"></use></svg></span></a>
+                  <a href="task_edit/{{task.id}}/1"><span class="btn btn-danger rounded-circle p-3 lh-1"><svg class="bi" width="24" height="24"><use xlink:href="#x-lg"></use></svg></span></a>
+                  <a href="task_edit/{{task.id}}/2"><span class="btn btn-success rounded-circle p-3 lh-1"><svg class="bi" width="24" height="24"><use xlink:href="#check-icon"></use></svg></span></a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="container-fluid">    
+    <a href="task_create/" class="btn btn-outline-secondary btn-lg px-4 ">
+        Criar nova tarefa
+    </a>
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4 align-items-right justify-content-right">
+            <a href="task_finished" id="sub_button" class="d-inline-flex s_b align-items-center fw-semibold btn btn-success btn-lg px-4">Tarefas Concluídas</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        const now_tasks = task_listage.getElementsByClassName('text-nowrap');
+        let val = "";
+        let result = "";
+        let first_v = "";
+        for (i=0; i< now_tasks.length; i++){
+            val = now_tasks[i].innerHTML
+            result = val.split(" ");
+            first_v = result[5]
+            const timeElapsed = Date.now();
+            const today = new Date(timeElapsed);
+            result_t = first_v.slice(32,34)+result[6]+result[7]+result[8]+result[9] +result[10]+result[11]
+            const date = new Date(result[7]+ " " + first_v.slice(32,34) + " " + result[9]);
+            const datePlusWeek = new Date(today.getTime()+7*24*60*60*1000);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                color: 'fff',
+                iconColor: '#151B26',
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'colored-notif'
+                },
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+                if((date.getDay() == today.getDay()) && (date.getMonth() == today.getMonth()) && (date.getYear() == today.getYear())){
+                    Toast.fire({
+                        icon: 'warning',
+                        title: 'Você possui tarefas para hoje!!'
+                    })
+                }else{
+                if(datePlusWeek >= date){
+                    const Toast2 = Swal.mixin({
+                        toast: false,
+                        position: 'center',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        color: 'fff',
+                        iconColor: '#151B26',
+                        timerProgressBar: true,
+                        customClass: {
+                            popup: 'colored-notif'
+                        },
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                        })
+
+                        Toast2.fire({
+                        icon: 'warning',
+                        title: 'Você possui tarefas próximas!!!'
+                        })  
+           
+                }   }  
+            
+        }
+    });
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}

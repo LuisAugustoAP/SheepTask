@@ -1,0 +1,110 @@
+{% extends 'main_base.html' %}
+
+{% block p_title %}Tarefas Concluídas{% endblock %}
+
+{% block content %}
+<h1 class="text-body-emphasis">Tarefas Concluídas</h1>
+
+<style>
+    .colored-notif{
+        background-color:#084F8C!important;
+    }
+</style>
+
+<input type=hidden id ="f" name=f value="{{f}}">
+<div class="row">
+    <div class="col-lg-3">
+
+    </div>
+
+    <div class="d-flex flex-column col-lg-6 p-4 gap-4 py-md-5 align-items-center justify-content-center">
+        <div class="list-group" id="task_listage">
+            {% for task in task_list %}
+                <div class="list-group-item rounded-3 py-3 ">
+                    <div class="d-flex gap-2 w-100 justify-content-between">
+                        <h4 class="mb-3">{{task.task_name}}</h4>
+                        <small class="opacity-50 text-nowrap"><svg class="bi me-1" width="1em" height="1em"><use xlink:href="#list-check"></use></svg>Finalizada em {{task.task_status}}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-lg-3 align-items-right">
+        <a href="/" ><span class="top-0 btn btn-outline-secondary-icon end-0 p-3 m-3 bg-secondary bg-opacity-10 rounded-pill"><svg class="bi" width="24" height="24"><use xlink:href="#bi-chevron-left"></use></svg></span></a>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        const now_tasks = task_listage.getElementsByClassName('text-nowrap');
+        let val = "";
+        let result = "";
+        let first_v = "";
+        for (i=0; i< now_tasks.length; i++){
+            val = now_tasks[i].innerHTML
+            result = val.split(" ");
+            first_v = result[5]
+            const timeElapsed = Date.now();
+            const today = new Date(timeElapsed);
+            result_t = first_v.slice(32,34)+result[6]+result[7]+result[8]+result[9] +result[10]+result[11]
+            const date = new Date(result[7]+ " " + first_v.slice(32,34) + " " + result[9]);
+            const datePlusWeek = new Date(date.getTime()+7*24*60*60*1000);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                color: 'fff',
+                iconColor: '#151B26',
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'colored-notif'
+                },
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            if(date.getYear() == today.getYear()){
+                if((date.getDay() == today.getDay()) && (date.getMonth() == today.getMonth())){
+
+                    Toast.fire({
+                        icon: 'warning',
+                        title: 'Você possui tarefas para hoje!!'
+                    })
+                
+                }else if(today < datePlusWeek){
+                    const Toast2 = Swal.mixin({
+                        toast: false,
+                        position: 'center',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        color: 'fff',
+                        iconColor: '#151B26',
+                        timerProgressBar: true,
+                        customClass: {
+                            popup: 'colored-notif'
+                        },
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                        })
+
+                        Toast2.fire({
+                        icon: 'warning',
+                        title: 'Você possui tarefas próximas!!!'
+                        })  
+           
+                }
+            }
+            
+        }
+    });
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}

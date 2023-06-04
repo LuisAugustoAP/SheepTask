@@ -1,0 +1,102 @@
+{% extends 'main_base.html' %}
+
+{% load static %}
+
+{% block p_title %}Adicionar Tarefas{% endblock %}
+
+{% block content %}
+
+<div class="row align-items-center">
+  <div class="col-md-3">
+
+  </div>
+  <div class="col-md-6">
+    <h1 class="text-body-emphasis border-bottom">Adicione suas tarefas!</h1>
+  </div>
+  <div class="col-md-3">
+    <a href="/" ><span class="top-0 btn btn-outline-secondary end-0 p-3 m-3 bg-secondary bg-opacity-10 rounded-pill"><svg class="bi" width="24" height="24"><use xlink:href="#bi-chevron-left"></use></svg></span></a>
+  </div>
+</div>
+<div class="row pt-4">
+  <div class="col-lg-4 align-items-center">
+    <img align="center" src="{% static 'images/skate_sheep.svg' %}" width="300" height="300"/> 
+  </div>
+  <style>
+    p{
+      margin-top:2px; 
+      margin-bottom:3px;
+    }
+    input{
+      margin-top:2px; 
+      margin-bottom:5px;
+    }
+  </style>
+  <div class="col-lg-4">
+      <form  class="h-100 p-5 bg-body-elementar border rounded-3 text-bg-dark rounded-4 shadow-lg" id="form_create" method="POST">
+          {% csrf_token %}
+          {{ form.as_p }}
+
+          <input type = "submit" value="Adicionar"id="sub_button" class="d-inline-flex  s_b align-items-center fw-semibold btn btn-primary btn-lg px-4">
+      </form>
+  </div>
+</div>
+<script>
+  $(document).ready(function(){
+    $('#sub_button').click(function() {
+      var task_name = document.forms["form_create"]["task_name"].value;
+      var task_date = document.forms["form_create"]["task_date"].value;
+
+      if (task_name == null || task_name == "") {
+        Swal.fire(
+          {
+            color: 'fff',
+            title: 'Campos vazios!',
+            background:'#151B26',
+            text: 'Você não preencheu qual sua tarefa!',
+            icon: 'error',
+            iconColor: '#733816',
+          }
+
+        )
+        return false;
+      }else if(task_date == null || task_date == ""){
+        Swal.fire(
+          {
+            color: 'fff',
+            title: 'Campos vazios!',
+            background:'#151B26',
+            text: 'Você não preencheu a data da tarefa!',
+            icon: 'error',
+            iconColor: '#733816',
+          }
+        )
+          return false;
+      }
+        $('#sub_button').attr('disabled', true);
+        Swal.fire({
+          title: 'Tem certeza ?',
+          color: 'fff',
+          text: "Deseja adicionar essa tarefa ?",
+          icon: 'question',
+          iconColor: '#084F8C',
+          background:'#151B26',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          confirmButtonColor: '#3F5173',
+          confirmButtonText: 'Sim',
+          showCancelButton: true,
+          cancelButtonText: 'Não!',
+          cancelButtonColor:'#733816',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById("form_create").submit();
+          }else if (result.dismiss === Swal.DismissReason.cancel){
+            $('#sub_button').attr('disabled', false);
+          }
+        })
+    });
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% endblock %}

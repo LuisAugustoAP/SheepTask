@@ -1,0 +1,23 @@
+{% extends 'main_base.html' %}
+
+{% load static %}
+
+{% block p_title %}Minhas Tarefas{% endblock %}
+
+{% block content %}
+
+  <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+    <div class="col-10 col-sm-8 col-lg-6">
+      <img class="bi mt-4 mb-3" src="{% static 'images/handstand_sheep.svg' %}" width="400" height="400"/> 
+    </div>
+    <div class="col-lg-6" >
+      <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Sem tarefas atuais!</h1>
+      <p class="lead">É muito mais fácil planejar seus dias com as tarefas pré programadas!</p>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <a href="task_create/" class="btn s_b btn-primary btn-lg px-4 me-md-2"><h5 class="fw-semibold">Agendar Tarefas!</h5></a>
+        <a href="task_finished/" class="btn s_b btn-success btn-lg px-4 me-md-2"><h5 class="fw-semibold">Tarefas Concluídas</h5></a>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

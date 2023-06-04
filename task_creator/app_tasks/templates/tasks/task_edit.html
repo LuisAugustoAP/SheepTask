@@ -1,0 +1,125 @@
+{% extends 'main_base.html' %}
+
+{% load static %}
+
+{% block p_title %}{{titulo}}{% endblock %}
+
+{% block content %}
+
+<input type=hidden id ="operation" name=operation value="{{operation}}">
+
+<div class="row align-items-center">
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-6">
+    <h1 class="text-body-emphasis border-bottom">{{titulo}}</h1>
+  </div>
+  <div class="col-md-3">
+    <a href="/" ><span class="top-0 btn btn-outline-secondary-icon end-0 p-3 m-3 bg-secondary bg-opacity-10 rounded-pill"><svg class="bi" width="24" height="24"><use xlink:href="#bi-chevron-left"></use></svg></span></a>
+  </div>
+</div>
+<div class="row pt-4">
+  <div class="col-lg-4 align-items-center">
+    <img align="center" src="{% static 'images/singing_sheep.svg' %}" width="300" height="300"/> 
+  </div>
+  <div class="col-lg-4">
+      <form class="h-100 p-5 bg-body-tertiary border rounded-3 text-bg-dark rounded-4 shadow-lg" id="form_create" method="POST">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type = "submit" value="Editar Tarefa" id="sub_button" class="d-inline-flex align-items-center s_b btn btn-primary btn-lg px-4">
+      </form>
+  </div>
+</div>
+<script>
+  $(document).ready(function(){
+    var operation_value=document.getElementById("operation").value;
+    $('#sub_button').click(function() {
+      var username = document.forms["form_create"]["task_name"].value;
+      if (username == null || username == "") {
+         Swal.fire(
+            'Campos vazios!',
+            'Você não preencheu algum campo!',
+            'error'
+          )
+          return false;
+      }
+      if(operation_value == 0){
+        $('#sub_button').attr('disabled', true);
+        Swal.fire({
+          title: 'Alterar Tarefa',
+          text: "Deseja editar mesmo essa tarefa ?",
+          icon: 'question',
+          showCancelButton: false,
+          color: 'fff',
+          background:'#151B26',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          confirmButtonColor: '#3F5173',
+          confirmButtonText: 'Sim!',
+          showCancelButton: true,
+          cancelButtonText: 'Não!',
+          cancelButtonColor:'#733816',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById("form_create").submit();
+          }else if (result.dismiss === Swal.DismissReason.cancel){
+            $('#sub_button').attr('disabled', false);
+          }
+        })
+      }
+    });
+    if(operation_value == 1){
+        $('#sub_button').attr('disabled', true);
+        Swal.fire({
+          title: 'Tem certeza ?',
+          text: "Deseja deletar mesmo essa tarefa ?",
+          icon: 'warning',
+          iconColor: '#592B11',
+          color: 'fff',
+          background:'#151B26',
+          showCancelButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          confirmButtonColor: '#3F5173',
+          confirmButtonText: 'Sim!',
+          showCancelButton: true,
+          cancelButtonText: 'Não!',
+          cancelButtonColor:'#733816',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById("form_create").submit();
+          }else if (result.dismiss === Swal.DismissReason.cancel){
+            window.location.href = "/";
+          }
+        })
+    }
+    if(operation_value == 2){
+        $('#sub_button').attr('disabled', true);
+        Swal.fire({
+          title: 'Sucesso',
+          text: "Sua tarefa foi finalizada!",
+          icon: 'success',
+          iconColor: '#592B11',
+          color: 'fff',
+          background:'#151B26',
+          showCancelButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          confirmButtonColor: '#3F5173',
+          confirmButtonText: 'Ok!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById("form_create").submit();
+          }else if (result.dismiss === Swal.DismissReason.cancel){
+            window.location.href = "/";
+          }
+        })
+    }
+
+
+
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% endblock %}
