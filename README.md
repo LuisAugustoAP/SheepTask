@@ -1,2 +1,3 @@
 # Sheep_Task
-Idea for a task manager. Initial develop.
+
+A simple task manager with Django and AWS. The theme colors and the sheep choice it's just random (or not...)
